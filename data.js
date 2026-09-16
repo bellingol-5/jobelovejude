@@ -11,7 +11,7 @@ const SITE_DATA = {
       url: "uploads/26a66fbe-cf83-4ece-9055-d55f97d78f3b.jpg",
       caption_en: "with my brother",
       caption_cn: "我爱你",
-      date: "",
+      date: "2026/09/16",
       likes: 0
     }
   ]
