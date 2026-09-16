@@ -6,6 +6,7 @@ const profileNameEl = document.getElementById('profile-name');
 
 const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
 const LIKES_KEY = 'photo_wall_likes';
+const MAX_CAPTION_LENGTH = 80;
 
 function loadLikes() {
   try {
@@ -70,40 +71,33 @@ function renderPhotos(photos) {
     btn.addEventListener('click', () => likePhoto(btn.dataset.id));
   });
 
-  document.querySelectorAll('.photo-caption').forEach(caption => {
-    const en = caption.dataset.en;
-    const cn = caption.dataset.cn;
+  document.querySelectorAll('.expand-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleCaption(btn.closest('.photo-caption'));
+    });
+  });
 
+  document.querySelectorAll('.photo-caption').forEach(caption => {
     if (isTouchDevice) {
-      caption.addEventListener('click', () => {
-        const current = caption.querySelector('.text').textContent;
-        if (current === en && cn) {
-          caption.querySelector('.text').textContent = cn;
-          caption.querySelector('.hint').textContent = '点击显示英文';
-        } else {
-          caption.querySelector('.text').textContent = en;
-          caption.querySelector('.hint').textContent = '点击显示中文';
-        }
+      caption.addEventListener('click', (e) => {
+        if (e.target.classList.contains('expand-btn')) return;
+        toggleCaptionLanguage(caption);
       });
     } else {
-      caption.addEventListener('mouseenter', () => {
-        if (cn) {
-          caption.querySelector('.text').textContent = cn;
-          caption.querySelector('.hint').textContent = '鼠标移开显示英文';
-        }
-      });
-      caption.addEventListener('mouseleave', () => {
-        caption.querySelector('.text').textContent = en;
-        caption.querySelector('.hint').textContent = '鼠标悬停显示中文';
-      });
+      caption.addEventListener('mouseenter', () => setCaptionLanguage(caption, 'cn'));
+      caption.addEventListener('mouseleave', () => setCaptionLanguage(caption, 'en'));
     }
   });
 }
 
 function createPhotoCard(photo) {
-  const displayCaption = photo.caption_en || photo.caption_cn || '';
+  const en = photo.caption_en || '';
+  const cn = photo.caption_cn || '';
+  const displayText = en || cn;
+  const needsExpand = displayText.length > MAX_CAPTION_LENGTH;
   const hintText = isTouchDevice ? '点击显示中文' : '鼠标悬停显示中文';
-  const hasTranslation = photo.caption_en && photo.caption_cn;
+  const hasTranslation = en && cn;
 
   return `
     <article class="photo-card">
@@ -113,12 +107,76 @@ function createPhotoCard(photo) {
         <button class="like-btn" data-id="${photo.id}" aria-label="点赞">♥</button>
         <span class="like-count" data-id="${photo.id}">${photo.likes || 0}</span>
       </div>
-      <div class="photo-caption" data-en="${escapeHtml(photo.caption_en)}" data-cn="${escapeHtml(photo.caption_cn)}">
-        <span class="text">${escapeHtml(displayCaption)}</span>
+      <div class="photo-caption"
+           data-en="${escapeHtml(en)}"
+           data-cn="${escapeHtml(cn)}"
+           data-current-lang="en"
+           data-expanded="false">
+        <span class="text">${escapeHtml(needsExpand ? truncate(displayText) : displayText)}</span>
         ${hasTranslation ? `<span class="hint">${hintText}</span>` : ''}
+        ${needsExpand ? `<button class="expand-btn" type="button">Show more / 展开</button>` : ''}
       </div>
     </article>
   `;
+}
+
+function truncate(text) {
+  return text.slice(0, MAX_CAPTION_LENGTH) + '...';
+}
+
+function setCaptionLanguage(caption, lang) {
+  const cn = caption.dataset.cn;
+  if (lang === 'cn' && !cn) return;
+
+  caption.dataset.currentLang = lang;
+  updateCaptionDisplay(caption);
+
+  const hint = caption.querySelector('.hint');
+  if (hint) {
+    if (isTouchDevice) {
+      hint.textContent = lang === 'cn' ? '点击显示英文' : '点击显示中文';
+    } else {
+      hint.textContent = lang === 'cn' ? '鼠标移开显示英文' : '鼠标悬停显示中文';
+    }
+  }
+}
+
+function toggleCaptionLanguage(caption) {
+  const current = caption.dataset.currentLang;
+  const next = current === 'cn' ? 'en' : 'cn';
+  setCaptionLanguage(caption, next);
+}
+
+function toggleCaption(caption) {
+  const expanded = caption.dataset.expanded === 'true';
+  caption.dataset.expanded = String(!expanded);
+  updateCaptionDisplay(caption);
+}
+
+function updateCaptionDisplay(caption) {
+  const en = caption.dataset.en;
+  const cn = caption.dataset.cn;
+  const lang = caption.dataset.currentLang || 'en';
+  const expanded = caption.dataset.expanded === 'true';
+
+  const fullText = lang === 'cn' && cn ? cn : en;
+  const textEl = caption.querySelector('.text');
+  const btn = caption.querySelector('.expand-btn');
+
+  if (!fullText) {
+    textEl.textContent = '';
+    return;
+  }
+
+  if (expanded || fullText.length <= MAX_CAPTION_LENGTH) {
+    textEl.textContent = fullText;
+  } else {
+    textEl.textContent = truncate(fullText);
+  }
+
+  if (btn) {
+    btn.textContent = expanded ? 'Show less / 收起' : 'Show more / 展开';
+  }
 }
 
 function likePhoto(id) {
