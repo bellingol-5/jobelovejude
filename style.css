@@ -198,6 +198,28 @@ body {
   letter-spacing: 0.5px;
 }
 
+.photo-caption .expand-btn {
+  display: block;
+  margin-top: 10px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.photo-caption .expand-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.photo-caption .text {
+  display: block;
+}
+
 .empty-state {
   text-align: center;
   padding: 80px 20px;
