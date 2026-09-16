@@ -1,0 +1,406 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0A0A0A;
+  --text: #EEEEEE;
+  --accent: #D4AF60;
+  --card-bg: #141414;
+  --border: #2A2A2A;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* 顶部资料栏 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+}
+
+.profile-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  background: var(--card-bg);
+}
+
+.avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+
+.admin-link {
+  margin-left: auto;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.admin-link:hover {
+  opacity: 1;
+}
+
+/* 照片墙瀑布流 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.photo-wall {
+  column-count: 1;
+  column-gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .photo-wall {
+    column-count: 2;
+    column-gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .photo-wall {
+    column-count: 3;
+    column-gap: 24px;
+  }
+}
+
+/* 照片卡片 */
+.photo-card {
+  break-inside: avoid;
+  margin-bottom: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.photo-card:hover {
+  border-color: rgba(212, 175, 96, 0.4);
+}
+
+.photo-date {
+  padding: 14px 16px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.photo-image {
+  width: 100%;
+  display: block;
+  cursor: pointer;
+}
+
+.photo-actions {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.like-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 18px;
+}
+
+.like-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+.like-btn:active {
+  transform: scale(0.95);
+}
+
+.like-count {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.photo-caption {
+  padding: 14px 16px 16px;
+  font-size: 15px;
+  color: var(--text);
+  min-height: 48px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.photo-caption:hover {
+  color: var(--accent);
+}
+
+.photo-caption .hint {
+  display: block;
+  font-size: 11px;
+  color: rgba(238, 238, 238, 0.4);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(238, 238, 238, 0.5);
+}
+
+.empty-state p {
+  margin-bottom: 12px;
+}
+
+/* 管理后台通用样式 */
+.admin-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.admin-title {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: var(--accent);
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: rgba(238, 238, 238, 0.8);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid #ff5f5f;
+  color: #ff5f5f;
+}
+
+.message {
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  display: none;
+}
+
+.message.success {
+  background: rgba(212, 175, 96, 0.15);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  display: block;
+}
+
+.message.error {
+  background: rgba(255, 95, 95, 0.15);
+  border: 1px solid #ff5f5f;
+  color: #ff5f5f;
+  display: block;
+}
+
+/* 登录框 */
+.login-box {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 32px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+/* 后台分区 */
+.section {
+  margin-bottom: 40px;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.section h2 {
+  font-size: 18px;
+  margin-bottom: 18px;
+  color: var(--accent);
+}
+
+.photo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.photo-list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 10px;
+}
+
+.photo-list-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.photo-list-item .info {
+  flex: 1;
+  font-size: 14px;
+}
+
+.photo-list-item .date {
+  color: rgba(238, 238, 238, 0.5);
+  font-size: 12px;
+}
+
+.photo-list-item .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photo-list-item .btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.photo-list-item.editing {
+  align-items: flex-start;
+}
+
+.photo-list-item.editing img {
+  margin-top: 8px;
+}
+
+.photo-list-item.editing .form-group label {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.photo-list-item.editing .form-group input,
+.photo-list-item.editing .form-group textarea {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.hidden {
+  display: none !important;
+}
